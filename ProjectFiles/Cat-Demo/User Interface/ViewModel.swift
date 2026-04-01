@@ -10,6 +10,8 @@ protocol CatDataDelegate {
 
 /// View model
 class ViewModel {
+    private(set) var currentPage = 0
+    private(set) var isLoadingBreeds = false
     var catDataDelegate: CatDataDelegate?
     
     /// Array of cat breeds
@@ -28,13 +30,31 @@ class ViewModel {
     
     /// Get the breeds
     func getBreeds() {
-        Network.fetchCatBreeds { (result) in
-            switch result
-            {
+        guard !isLoadingBreeds else { return }
+        isLoadingBreeds = true
+        currentPage = 0
+        Network.fetchCatBreeds(page: currentPage) { result in
+            self.isLoadingBreeds = false
+            switch result {
+            case .success(let breeds): self.catBreeds = breeds
+            case .failure(let error): print(error)
+            }
+        }
+    }
+    /// Get more breeds
+    func getMoreBreeds() {
+        
+        guard !isLoadingBreeds else { return }
+        isLoadingBreeds = true
+        currentPage += 1
+        
+        Network.fetchCatBreeds(page: currentPage) { result in
+            self.isLoadingBreeds = false
+            switch result {
             case .success(let breeds):
-                self.catBreeds = breeds
-                
+                self.catBreeds = (self.catBreeds ?? []) + breeds
             case .failure(let error):
+                self.currentPage -= 1   // roll back on failure
                 print(error)
             }
         }

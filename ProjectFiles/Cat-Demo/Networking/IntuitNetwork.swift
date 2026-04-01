@@ -19,11 +19,14 @@ class Network {
     
     /// FetchCatBreeds - retrieve a list of cat breeds from The Cat API
     ///
-    /// - Parameter completion: Closure that returns CatBreed on success, an Error on failure
-    class func fetchCatBreeds(completion: @escaping (Swift.Result<[CatBreed], Error>) -> Void) {
+    /// - Parameters
+    ///   page - current page number to retrieve
+    ///   completion: Closure that returns CatBreed on success, an Error on failure
+    ///
+    class func fetchCatBreeds(page: Int, completion: @escaping (Swift.Result<[CatBreed], Error>) -> Void) {
         
         /// Create the URL for the request
-        guard let url = URL(string: "https://api.thecatapi.com/v1/breeds?limit=10&page=0") else {
+        guard let url = URL(string: "https://api.thecatapi.com/v1/breeds?limit=20&page=\(page)") else {
             let error = NSError(domain: "Network.fetchCats", code: NetworkError.badUrl.rawValue, userInfo: nil)
             return completion(Result.failure(error))
         }

@@ -42,6 +42,15 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         
         viewModel.getCatImage(breedId: catId)
     }
+    
+    func tableView(_ tableView: UITableView,
+                   willDisplay cell: UITableViewCell,
+                   forRowAt indexPath: IndexPath) {
+        let lastRow = (viewModel.catBreeds?.count ?? 0) - 1
+        if indexPath.row == lastRow {
+            viewModel.getMoreBreeds()
+        }
+    }
 }
 
 // MARK: -

@@ -9,6 +9,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 60
+        
         self.tableView.dataSource = self
         self.tableView.delegate = self
         
@@ -30,6 +33,8 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         cell.textLabel?.text = viewModel.catBreeds?[indexPath.row].name
+        cell.detailTextLabel?.text = viewModel.catBreeds?[indexPath.row].description
+        cell.detailTextLabel?.numberOfLines = 0  // allow wrapping for long descriptions
         
         return cell
     }

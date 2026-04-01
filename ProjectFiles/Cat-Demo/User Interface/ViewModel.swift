@@ -1,11 +1,9 @@
 // Copyright © 2021 Intuit, Inc. All rights reserved.
 import Foundation
-import UIKit
 
 /// Basic Delegate interface to send messages
 protocol CatDataDelegate {
     func breedsChangedNotification()
-    func imageChangedNotification()
 }
 
 /// View model
@@ -18,13 +16,6 @@ class ViewModel {
     var catBreeds: [CatBreed]? {
         didSet {
             self.catDataDelegate?.breedsChangedNotification()
-        }
-    }
-    
-    /// Image of the cat
-    var catImage: UIImage? {
-        didSet {
-            self.catDataDelegate?.imageChangedNotification()
         }
     }
     
@@ -55,19 +46,6 @@ class ViewModel {
                 self.catBreeds = (self.catBreeds ?? []) + breeds
             case .failure(let error):
                 self.currentPage -= 1   // roll back on failure
-                print(error)
-            }
-        }
-    }
-    
-    func getCatImage(breedId: String) {
-        Network.fetchCatImage(breedId: breedId) { (result) in
-            switch result
-            {
-            case .success(let image):
-                self.catImage = image
-                
-            case .failure(let error):
                 print(error)
             }
         }
